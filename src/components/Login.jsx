@@ -1,7 +1,23 @@
-import React from "react";
-import { Link } from "react-router-dom"; // Make sure React Router is set up
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Simple credential check
+    if (email === 'hamdansultan' && password === 'hamy123') {
+      // Redirect to dashboard
+      navigate('/dashboard');
+    } else {
+      alert('Invalid credentials');
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 to-blue-500">
       <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
@@ -9,16 +25,20 @@ function Login() {
           Login
         </h2>
 
-        <form className="space-y-6">
+        <form className="space-y-6" onSubmit={handleSubmit}>
           <input
-            type="email"
+            type="text"
             placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
 
           <input
             type="password"
             placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
 
@@ -40,13 +60,6 @@ function Login() {
             Login with Google
           </button>
         </div>
-
-        <p className="mt-6 text-center text-gray-600">
-          Not signed in?{" "}
-          <Link to="/register" className="text-blue-600 hover:underline">
-            Please register
-          </Link>
-        </p>
       </div>
     </div>
   );
