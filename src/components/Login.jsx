@@ -9,7 +9,7 @@ function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Simple credential check
+    // Credential check
     if (email === 'hamdansultan' && password === 'hamy123') {
       // Redirect to dashboard
       navigate('/dashboard');
