@@ -10,7 +10,7 @@ function Login() {
     e.preventDefault();
 
     // Credential check
-    if (email === 'hamdansultan' && password === 'hamy123') {
+    if (email === 'ham' && password === 'hamy') {
       // Redirect to dashboard
       navigate('/dashboard');
     } else {

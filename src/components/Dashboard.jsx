@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Employees from "./Employees";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    department: ''
+    name: "",
+    email: "",
+    phone: "",
+    department: "",
   });
 
   const [employees, setEmployees] = useState([]);
@@ -17,18 +16,38 @@ function Dashboard() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleAddEmployee = (e) => {
+  // const handleAddEmployee = (e) => {
+  //   e.preventDefault();
+  //   console.log('Form Submitted:', formData); // ✅ Log formData
+  //   setEmployees([...employees, formData]);
+  //   setFormData({ name: '', email: '', phone: '', department: '' });
+  // };
+
+  const handleAddEmployee = async (e) => {
     e.preventDefault();
-    setEmployees([...employees, formData]);
-    setFormData({ name: '', email: '', phone: '', department: '' });
+    console.log(formData);
+
+    try {
+      const response = await fetch("http://localhost:8080/api/employee", {
+        method: "post",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+      console.log("Employee created", data);
+      navigate("/dashboard");
+    } catch (error) {
+      console.log("Error creating employee", error.message);
+    }
   };
 
   const handleLogout = () => {
-    navigate('/');
+    navigate("/");
   };
 
   const goToEmployeeTable = () => {
-    navigate('/employees', { state: { employees } });
+    navigate("/employees", { state: { employees } });
   };
 
   return (
@@ -37,9 +56,15 @@ function Dashboard() {
       <nav className="bg-blue-800 p-4 flex justify-between items-center shadow-lg transition-all duration-500">
         <h2 className="text-xl font-bold animate-pulse">ExcelSoft Dashboard</h2>
         <div className="flex gap-4">
-          <button className="hover:bg-blue-600 px-3 py-2 rounded transition-all duration-300">Home</button>
-          <button className="hover:bg-blue-600 px-3 py-2 rounded transition-all duration-300">Profile</button>
-          <button className="hover:bg-blue-600 px-3 py-2 rounded transition-all duration-300">Settings</button>
+          <button className="hover:bg-blue-600 px-3 py-2 rounded transition-all duration-300">
+            Dashboard
+          </button>
+          <button className="hover:bg-blue-600 px-3 py-2 rounded transition-all duration-300">
+            Profile
+          </button>
+          <button className="hover:bg-blue-600 px-3 py-2 rounded transition-all duration-300">
+            Settings
+          </button>
           <button
             className="bg-green-600 hover:bg-green-700 px-3 py-2 rounded transition-all duration-300"
             onClick={goToEmployeeTable}
@@ -61,7 +86,9 @@ function Dashboard() {
           onSubmit={handleAddEmployee}
           className="bg-white text-black p-8 rounded-lg shadow-lg w-full max-w-lg space-y-4"
         >
-          <h2 className="text-2xl font-bold text-center text-gray-800">Add Employee</h2>
+          <h2 className="text-2xl font-bold text-center text-gray-800">
+            Add Employee
+          </h2>
           <input
             name="name"
             placeholder="Name"
@@ -85,13 +112,20 @@ function Dashboard() {
             onChange={handleChange}
             className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <input
+          <select
             name="department"
-            placeholder="Department"
             value={formData.department}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+            className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-black"
+          >
+            <option value="">Select Department</option>
+            <option value="HR">HR</option>
+            <option value="Administration">Administration</option>
+            <option value="IT Teams">IT Teams</option>
+            <option value="Trainee Engineer">Trainee Engineer</option>
+            <option value="ASE">ASE</option>
+            <option value="JAVA SDE">JAVA SDE</option>
+          </select>
           <button
             type="submit"
             className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
